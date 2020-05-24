@@ -8,6 +8,7 @@ using FlightControlWeb.DataBaseClasses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace FlightControlWeb.Controllers
 {
@@ -32,7 +33,7 @@ namespace FlightControlWeb.Controllers
         [HttpPost]
         public ActionResult<FlightPlan> PostFlightPlan([FromBody] FlightPlan plan)
         {
-            string id = Utiles.GenarateID(plan.Company_Name);
+            string id = Utiles.GenarateId(plan.CompanyName);
             bool isAdd = _flightPlans.TryAdd(id, plan);
             if (!isAdd)
             {
@@ -44,7 +45,7 @@ namespace FlightControlWeb.Controllers
 
         //get - /api/FlightPlan/{id}
         [HttpGet("{id}" , Name = "GetFlightPlan")]
-        public ActionResult<FlightPlan> GetFlightPlan(string id)
+        public async Task<ActionResult<FlightPlan>> GetFlightPlan(string id)
         {
             FlightPlan flight;
             if (_flightPlans.TryGetValue(id, out flight))
@@ -58,11 +59,19 @@ namespace FlightControlWeb.Controllers
             }
 
             Server server;
-            if (!_servers.TryGetValue(id, out server))
+            if (!_servers.TryGetValue(serverId, out server))
             {
                 return NotFound(id);
             }
             //TODO try get from another server
+            HttpResponseMessage respone = await _client.GetAsync(server.ServerUrl + "/api/FlightPlan/" + id);
+            if (!respone.IsSuccessStatusCode)
+            {
+                return NotFound(id);
+            }
+            var content = respone.Content;
+            string data = await content.ReadAsStringAsync();
+            flight = JsonConvert.DeserializeObject<FlightPlan>(data);
 
             return Ok(flight);
         }

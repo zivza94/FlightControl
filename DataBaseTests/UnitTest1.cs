@@ -14,7 +14,7 @@ namespace DataBaseTests
         {
             double expected = 240;
             /*Location location = new Location(34.0,34.0,DateTime.Now);
-            FlightPlan plan = new FlightPlan("W1234IL",100,"wizzair",location,new LinkedList<segment>());*/
+            FlightPlan plan = new FlightPlan("W1234IL",100,"wizzair",location,new LinkedList<Segment>());*/
             double start = 100;
             double end = 400;
             DateTime startTime = new DateTime(2020,05,20,7,40,0);
@@ -30,10 +30,10 @@ namespace DataBaseTests
             Location location = new Location(34.0, 32.2, DateTime.Now);
             double lat = 34.2, lon = 32.4;
             int time = 500;
-            LinkedList<segment> segments = new LinkedList<segment>();
+            LinkedList<Segment> segments = new LinkedList<Segment>();
             for (var i = 0; i < 10; i++)
             {
-                segment seg = new segment(lat,lon,time);
+                Segment seg = new Segment(lat,lon,time);
                 lat += 0.2;
                 lon += 0.2;
                 segments.AddLast(seg);

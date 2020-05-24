@@ -23,7 +23,7 @@ namespace FlightControlWeb.DataBaseClasses
 
         public double Longitude { get=>_longitude; set=>_longitude = value; }
         public double Latitude { get=>_latitude; set=>_latitude = value; }
-        public DateTime Date_Time
+        public DateTime DateTime
         {
             get { return _time;}
             set { _time = value; }

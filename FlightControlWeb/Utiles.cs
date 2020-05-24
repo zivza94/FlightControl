@@ -40,7 +40,7 @@ namespace FlightControlWeb
             return current;
         }
 
-        public static string GenarateID(string start)
+        public static string GenarateId(string start)
         {
             string id = "";
             id += start.Substring(0, 2);
