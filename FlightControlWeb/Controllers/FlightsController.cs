@@ -35,22 +35,24 @@ namespace FlightControlWeb.Controllers
         // get - /api/Flights?relative_to=<DATE_TIME>
         // get - /api/Flights?relative_to=<DATE_TIME> &sync_all
         [HttpGet]
-        public ActionResult<List<Flight>> GetActiveFlights(string relativeTo)
+        public async Task<ActionResult<List<Flight>>> GetActiveFlights(string relative_to)
         {
 
             List<Flight> flights = new List<Flight>();
-            DateTime currentTime = Utiles.StringToDateTime(relativeTo);
+            DateTime currentTime = Utiles.StringToDateTime(relative_to);
             flights = ActiveFlights(currentTime);
             if (!Request.Query.ContainsKey("sync_all"))
             {
                 return Ok(flights);
             }
-            flights.AddRange(FlightsFromServers(relativeTo).Result);
+
+            var externalFlights = await FlightsFromServers(relative_to);
+            flights.AddRange(externalFlights);
             return Ok(flights);
         }
         //delete - /api/Flights/{id}
         [HttpDelete("{id}")]
-        public ActionResult DeleteFlight(string id)
+        public async Task<ActionResult> DeleteFlight(string id)
         {
             FlightPlan plan;
             if (!_flightPlans.TryRemove(id, out plan))
@@ -69,7 +71,7 @@ namespace FlightControlWeb.Controllers
                 Flight flight = entry.Value.GetFlightByTime(currentTime,entry.Key);
                 if (flight != null)
                 {
-                    flight.IsExternal= false;
+                    flight.Is_External= false;
                     flights.Add(flight);
                 }
             }
@@ -85,25 +87,43 @@ namespace FlightControlWeb.Controllers
             foreach (Server server in _servers.Values)
             {
                 List<Flight> externalFlights = new List<Flight>();
-                //TODO ask for other servers for Flights
-                HttpResponseMessage respone =  await _client.GetAsync(server.ServerUrl + "/api/Flights?relative_to=" + relativeTo);
-                if (respone.StatusCode != HttpStatusCode.OK)
+                //get json of flights
+                string data = await RetriveDataFromServer(server, relativeTo);
+                if (data == "")
                 {
-                    return null;
+                    continue;
                 }
-
-                var content = respone.Content;
-                var data = await content.ReadAsStringAsync();
+                //desrialize
                 externalFlights = JsonConvert.DeserializeObject<List<Flight>>(data);
                 foreach (Flight flight in externalFlights)
                 {
-                    bool isOk = _externalFlights.TryAdd(flight.FlightId, server.ServerId);
-                    flight.IsExternal = true;
+                    bool isOk = _externalFlights.TryAdd(flight.Flight_Id, server.ServerId);
+                    flight.Is_External = true;
                 }
+                //add to flights
                 flights.AddRange(externalFlights);
             }
-
             return flights;
+        }
+
+        public async Task<string> RetriveDataFromServer(Server server,string relativeTo)
+        {
+            HttpResponseMessage respone;
+            try
+            {
+                respone = await _client.GetAsync(server.ServerUrl + "/api/Flights?relative_to=" + relativeTo);
+            }
+            catch
+            {
+                return "";
+            }
+            if (respone.StatusCode != HttpStatusCode.OK)
+            {
+                return "";
+            }
+            var content = respone.Content;
+            var data = await content.ReadAsStringAsync();
+            return data;
         }
     }
 }

@@ -31,9 +31,9 @@ namespace FlightControlWeb.Controllers
             _client = factory.CreateClient("api");
         }
         [HttpPost]
-        public ActionResult<FlightPlan> PostFlightPlan([FromBody] FlightPlan plan)
+        public async Task<ActionResult<FlightPlan>> PostFlightPlan([FromBody] FlightPlan plan)
         {
-            string id = Utiles.GenarateId(plan.CompanyName);
+            string id = Utiles.GenarateId(plan.Company_Name);
             bool isAdd = _flightPlans.TryAdd(id, plan);
             if (!isAdd)
             {
@@ -63,7 +63,6 @@ namespace FlightControlWeb.Controllers
             {
                 return NotFound(id);
             }
-            //TODO try get from another server
             HttpResponseMessage respone = await _client.GetAsync(server.ServerUrl + "/api/FlightPlan/" + id);
             if (!respone.IsSuccessStatusCode)
             {
@@ -78,7 +77,7 @@ namespace FlightControlWeb.Controllers
 
         // HttpGet without id throws bad request
         [HttpGet]
-        public ActionResult<FlightPlan> GetFlightPlanError()
+        public async Task<ActionResult<FlightPlan>> GetFlightPlanError()
         {
             return BadRequest("No ID");
         }

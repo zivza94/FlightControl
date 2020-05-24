@@ -34,7 +34,7 @@ namespace FlightControlWeb.Controllers
 
         // post /api/servers
         [HttpPost]
-        public ActionResult PostServer(Server server)
+        public async Task<ActionResult> PostServer(Server server)
         {
             if (!_servers.TryAdd(server.ServerId, server))
             {
@@ -46,7 +46,7 @@ namespace FlightControlWeb.Controllers
 
         // delete /api/servers/{id}
         [HttpDelete("{id}")]
-        public ActionResult DeleteServer(string id)
+        public async Task<ActionResult> DeleteServer(string id)
         {
             if (!_servers.TryRemove(id, out Server server))
             {

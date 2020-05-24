@@ -13,11 +13,11 @@ namespace FlightControlWeb.DataBaseClasses
         {
             Latitude = startLatitude;
             Longitude = startLongitude;
-            TimespanSeconds = timespan;
+            Timespan_Seconds = timespan;
         }
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public int TimespanSeconds { get; set; }
+        public int Timespan_Seconds { get; set; }
     }
 }

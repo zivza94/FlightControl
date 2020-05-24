@@ -20,7 +20,7 @@
     "FlightControlWeb": {
       "commandName": "Project",
       "launchBrowser": false,
-      "launchUrl": "",
+      "launchUrl": "index.html",
       "applicationUrl": "http://localhost:5200",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

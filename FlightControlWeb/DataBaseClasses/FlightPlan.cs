@@ -7,9 +7,9 @@ namespace FlightControlWeb.DataBaseClasses
 {
     public class FlightPlan
     {
-        public string CompanyName { get; set; }
+        public string Company_Name { get; set; }
         public int Passengers { get; set;}
-        public Location InitialLocation { get; set; }
+        public Location Initial_Location { get; set; }
         public LinkedList<Segment> Segments { get; set; }
         public FlightPlan()
         {
@@ -20,24 +20,24 @@ namespace FlightControlWeb.DataBaseClasses
         {
             //_id = GenarateID(companyName);
             Passengers = passengers;
-            CompanyName = companyName;
-            InitialLocation = location;
+            Company_Name = companyName;
+            Initial_Location = location;
             Segments = segments;
         }
         public int FindSegment(DateTime currentTime)
         {
             // -1 --> didn't start or already finished
             int seg = -1;
-            DateTime startTime = InitialLocation.DateTime;
+            DateTime startTime = Initial_Location.Date_Time;
             while ((startTime <= currentTime) && ((seg+1) < Segments.Count))
             {
                 seg++;
-                int timespan = Segments.ElementAt(seg).TimespanSeconds;
+                int timespan = Segments.ElementAt(seg).Timespan_Seconds;
                 startTime = startTime.AddSeconds(timespan);
             }
 
             //seg = seg - 1;
-            if (startTime < currentTime || InitialLocation.DateTime > currentTime)
+            if (startTime < currentTime || Initial_Location.Date_Time > currentTime)
             {
                 seg = -1;
             }
@@ -51,9 +51,9 @@ namespace FlightControlWeb.DataBaseClasses
             {
                 return null;
             }
-            DateTime startsegTime = InitialLocation.DateTime;
-            double startLatitude = InitialLocation.Latitude;
-            double startLongitude = InitialLocation.Longitude;
+            DateTime startsegTime = Initial_Location.Date_Time;
+            double startLatitude = Initial_Location.Latitude;
+            double startLongitude = Initial_Location.Longitude;
             double endLatitude = Segments.ElementAt(segIndex).Latitude;
             double endLongitude = Segments.ElementAt(segIndex).Longitude;
             if (segIndex != 0)
@@ -65,11 +65,11 @@ namespace FlightControlWeb.DataBaseClasses
             while (i < segIndex)
             {
                 i++;
-                startsegTime = startsegTime.AddSeconds(Segments.ElementAt(i).TimespanSeconds);
+                startsegTime = startsegTime.AddSeconds(Segments.ElementAt(i).Timespan_Seconds);
             }
-            latitude = Utiles.LinearInterpolation(startLatitude, endLatitude, startsegTime, Segments.ElementAt(i).TimespanSeconds, current);
-            longitude = Utiles.LinearInterpolation(startLongitude, endLongitude, startsegTime, Segments.ElementAt(i).TimespanSeconds, current);
-            return new Flight(id,longitude,latitude, Passengers, CompanyName,current);
+            latitude = Utiles.LinearInterpolation(startLatitude, endLatitude, startsegTime, Segments.ElementAt(i).Timespan_Seconds, current);
+            longitude = Utiles.LinearInterpolation(startLongitude, endLongitude, startsegTime, Segments.ElementAt(i).Timespan_Seconds, current);
+            return new Flight(id,longitude,latitude, Passengers, Company_Name,current);
         }
     }
 }
