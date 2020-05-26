@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace FlightControlWeb.DataBaseClasses
 {
@@ -10,22 +12,29 @@ namespace FlightControlWeb.DataBaseClasses
         public Flight(string id, double longitude, double latitude, int passengers, string companyName,
             DateTime dateTime)
         {
-            Flight_Id = id;
+            Id = id;
             Longitude = longitude;
             Latitude = latitude;
             Passengers = passengers;
-            Company_Name = companyName;
-            Date_Time = dateTime;
+            CompanyName = companyName;
+            DateTime = dateTime;
         }
         public Flight()
         {
         }
-        public string Flight_Id { get; set; }
+        [JsonPropertyName("flight_id")]
+        public string Id { get; set; }
+        [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
+        [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
+        [JsonPropertyName("passengers")]
         public int Passengers { get; set; }
-        public string Company_Name { get; set; }
-        public DateTime Date_Time { get; set; }
-        public bool Is_External { get; set; }
+        [JsonPropertyName("company_name")]
+        public string CompanyName { get; set; }
+        [JsonPropertyName("date_time")]
+        public DateTime DateTime { get; set; }
+        [JsonPropertyName("is_external")]
+        public bool IsExternal { get; set; }
     }
 }

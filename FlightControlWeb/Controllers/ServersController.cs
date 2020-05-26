@@ -13,9 +13,9 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class ServersController : ControllerBase
     {
-        private ConcurrentDictionary<String, Server> _servers;
+        private IDictionary<String, Server> _servers;
 
-        public ServersController(ConcurrentDictionary<String, Server> servers)
+        public ServersController(IDictionary<String, Server> servers)
         {
             _servers = servers;
         }
@@ -36,6 +36,10 @@ namespace FlightControlWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> PostServer(Server server)
         {
+            if (!server.ValidateServer())
+            {
+                return BadRequest("server not valid");
+            }
             if (!_servers.TryAdd(server.ServerId, server))
             {
                 return BadRequest("Couldn't add server");
@@ -48,10 +52,11 @@ namespace FlightControlWeb.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteServer(string id)
         {
-            if (!_servers.TryRemove(id, out Server server))
+            if (!_servers.TryGetValue(id, out Server server))
             {
                 return NotFound(id);
             }
+            _servers.Remove(id);
             return Ok(id);
         }
     }

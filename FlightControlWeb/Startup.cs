@@ -29,9 +29,9 @@ namespace FlightControlWeb
             services.AddControllers();
             services.AddRouting();
             //databases
-            services.AddSingleton(typeof(ConcurrentDictionary<string,FlightPlan>), typeof(ConcurrentDictionary<string,FlightPlan>));
-            services.AddSingleton(typeof(ConcurrentDictionary<string, Server>), typeof(ConcurrentDictionary<string, Server>));
-            services.AddSingleton(typeof(ConcurrentDictionary<string, string>), typeof(ConcurrentDictionary<string, string>));
+            services.AddSingleton(typeof(IDictionary<string,FlightPlan>), typeof(ConcurrentDictionary<string,FlightPlan>));
+            services.AddSingleton(typeof(IDictionary<string, Server>), typeof(ConcurrentDictionary<string, Server>));
+            services.AddSingleton(typeof(IDictionary<string, string>), typeof(ConcurrentDictionary<string, string>));
             //client
             services.AddHttpClient("api", client =>
                 client.DefaultRequestHeaders.Add("Accept", "application/json"));
@@ -46,6 +46,7 @@ namespace FlightControlWeb
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseRouting();

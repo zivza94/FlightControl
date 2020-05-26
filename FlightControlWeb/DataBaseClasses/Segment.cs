@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace FlightControlWeb.DataBaseClasses
 {
     public class Segment
     {
+
         public Segment()
         { }
         public Segment(double startLatitude, double startLongitude, int timespan)
         {
             Latitude = startLatitude;
             Longitude = startLongitude;
-            Timespan_Seconds = timespan;
+            TimespanSecond = timespan;
         }
 
+        [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
+        [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
-        public int Timespan_Seconds { get; set; }
+
+        [JsonPropertyName("timespan_seconds")]
+        public int TimespanSecond { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 
 namespace FlightControlWeb.DataBaseClasses
@@ -13,13 +15,27 @@ namespace FlightControlWeb.DataBaseClasses
         {
             Longitude = longitude;
             Latitude = latitude;
-            Date_Time= time;
+            DateTime= time;
 
         }
-
+        [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
+
+        [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
-        public DateTime Date_Time { get ; set ; }
+
+        [JsonPropertyName("date_time")]
+        public DateTime DateTime { get ; set ; }
+
+        public bool ValidateLocation()
+        {
+            if (Longitude != null && Latitude != null && DateTime != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
         
 }

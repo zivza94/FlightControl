@@ -1,4 +1,7 @@
-﻿namespace FlightControlWeb.DataBaseClasses
+﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+
+namespace FlightControlWeb.DataBaseClasses
 {
     public class Server
     {
@@ -12,8 +15,21 @@
             ServerUrl = url;
         }
 
+        [JsonPropertyName("serverId")]
         public string ServerId { get; set; }
+
+        [JsonPropertyName("serverUrl")]
         public string ServerUrl { get; set; }
+
+        public bool ValidateServer()
+        {
+            if(ServerId ==null || ServerUrl == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
         
     }
 }

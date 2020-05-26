@@ -16,14 +16,14 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class FlightPlanController : ControllerBase
     {
-        private ConcurrentDictionary<string,FlightPlan> _flightPlans;
-        private ConcurrentDictionary<string, Server> _servers;
-        private ConcurrentDictionary<string, string> _externalFlights;
+        private IDictionary<string,FlightPlan> _flightPlans;
+        private IDictionary<string, Server> _servers;
+        private IDictionary<string, string> _externalFlights;
         private HttpClient _client;
 
-        public FlightPlanController(ConcurrentDictionary<string, FlightPlan> flightPlans,
-            ConcurrentDictionary<string, Server> servers,
-            ConcurrentDictionary<string,string> externalFlights,IHttpClientFactory factory)
+        public FlightPlanController(IDictionary<string, FlightPlan> flightPlans,
+            IDictionary<string, Server> servers,
+            IDictionary<string,string> externalFlights,IHttpClientFactory factory)
         {
             _flightPlans = flightPlans;
             _servers = servers;
@@ -33,13 +33,18 @@ namespace FlightControlWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<FlightPlan>> PostFlightPlan([FromBody] FlightPlan plan)
         {
-            string id = Utiles.GenarateId(plan.Company_Name);
+            //FlightPlan plan = JsonConvert.DeserializeObject<FlightPlan>(planJson);
+            if (!plan.ValidateFlightPlan())
+            {
+                return BadRequest("Flight plan isn't valid");
+            }
+            string id = Utiles.GenarateId(plan.CompanyName);
             bool isAdd = _flightPlans.TryAdd(id, plan);
             if (!isAdd)
             {
                 return BadRequest("Error in POST");
             }
-            return CreatedAtAction(actionName: "GetFlightPlan", new {id = id}, plan);
+            return CreatedAtAction(actionName: "GetFlightPlan", new { id }, plan);
         }
 
 
@@ -81,5 +86,8 @@ namespace FlightControlWeb.Controllers
         {
             return BadRequest("No ID");
         }
+
+
+        
     }
 }

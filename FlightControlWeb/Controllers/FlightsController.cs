@@ -17,14 +17,14 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class FlightsController : ControllerBase
     {
-        private ConcurrentDictionary<string, FlightPlan> _flightPlans;
-        private ConcurrentDictionary<string, Server> _servers;
-        private ConcurrentDictionary<string, string> _externalFlights;
+        private IDictionary<string, FlightPlan> _flightPlans;
+        private IDictionary<string, Server> _servers;
+        private IDictionary<string, string> _externalFlights;
         private HttpClient _client;
 
-        public FlightsController(ConcurrentDictionary<string, FlightPlan> flightPlans,
-            ConcurrentDictionary<string, Server> servers,
-            ConcurrentDictionary<string,string> externalFlights, IHttpClientFactory factory)
+        public FlightsController(IDictionary<string, FlightPlan> flightPlans,
+            IDictionary<string, Server> servers,
+            IDictionary<string,string> externalFlights, IHttpClientFactory factory)
         {
             _flightPlans = flightPlans;
             _servers = servers;
@@ -55,11 +55,12 @@ namespace FlightControlWeb.Controllers
         public async Task<ActionResult> DeleteFlight(string id)
         {
             FlightPlan plan;
-            if (!_flightPlans.TryRemove(id, out plan))
+            if (!_flightPlans.TryGetValue(id, out plan))
             {
                 return NotFound(id);
             }
 
+            _flightPlans.Remove(id);
             return Ok(id);
         }
 
@@ -71,7 +72,7 @@ namespace FlightControlWeb.Controllers
                 Flight flight = entry.Value.GetFlightByTime(currentTime,entry.Key);
                 if (flight != null)
                 {
-                    flight.Is_External= false;
+                    flight.IsExternal= false;
                     flights.Add(flight);
                 }
             }
@@ -97,8 +98,8 @@ namespace FlightControlWeb.Controllers
                 externalFlights = JsonConvert.DeserializeObject<List<Flight>>(data);
                 foreach (Flight flight in externalFlights)
                 {
-                    bool isOk = _externalFlights.TryAdd(flight.Flight_Id, server.ServerId);
-                    flight.Is_External = true;
+                    bool isOk = _externalFlights.TryAdd(flight.Id, server.ServerId);
+                    flight.IsExternal = true;
                 }
                 //add to flights
                 flights.AddRange(externalFlights);
