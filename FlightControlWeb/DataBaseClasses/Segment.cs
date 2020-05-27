@@ -11,7 +11,11 @@ namespace FlightControlWeb.DataBaseClasses
     {
 
         public Segment()
-        { }
+        {
+            Latitude = -200;
+            Longitude = -200;
+            TimespanSecond = -1;
+        }
         public Segment(double startLatitude, double startLongitude, int timespan)
         {
             Latitude = startLatitude;
@@ -26,5 +30,19 @@ namespace FlightControlWeb.DataBaseClasses
 
         [JsonPropertyName("timespan_seconds")]
         public int TimespanSecond { get; set; }
+
+        public bool IsValid()
+        {
+            if (!Utiles.IsLongitudeValid(Longitude) || !Utiles.IsLatitudeValid(Latitude))
+            {
+                return false;
+            }
+
+            if (TimespanSecond < 0)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

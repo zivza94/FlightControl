@@ -34,7 +34,7 @@ namespace FlightControlWeb.Controllers
         public async Task<ActionResult<FlightPlan>> PostFlightPlan([FromBody] FlightPlan plan)
         {
             //FlightPlan plan = JsonConvert.DeserializeObject<FlightPlan>(planJson);
-            if (!plan.ValidateFlightPlan())
+            if (!plan.IsValid())
             {
                 return BadRequest("Flight plan isn't valid");
             }

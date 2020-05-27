@@ -47,5 +47,22 @@ namespace FlightControlWeb
             id += new Random().Next(1000, 9999);
             return id;
         }
+
+        public static bool IsLongitudeValid(double longitude)
+        {
+            if (longitude <= -200)
+            {
+                return false;
+            }
+            return true;
+        }
+        public static bool IsLatitudeValid(double latitude)
+        {
+            if (latitude <= -200)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

@@ -22,7 +22,10 @@ namespace FlightControlWeb.DataBaseClasses
         public LinkedList<Segment> Segments { get; set; }
         public FlightPlan()
         {
-            
+            Passengers = -1;
+            CompanyName = null;
+            InitialLocation = null;
+            Segments = null;
         }
         //public string Id => _id;
         public FlightPlan(int passengers, string companyName, Location location, LinkedList<Segment> segments)
@@ -81,23 +84,32 @@ namespace FlightControlWeb.DataBaseClasses
             return new Flight(id,longitude,latitude, Passengers, CompanyName,current);
         }
 
-        public bool ValidateFlightPlan()
+        public bool IsValid()
         {
             if (CompanyName == null)
             {
                 return false;
             }
-
-            if (Segments == null || Segments.Count ==0)
+            if (Segments == null || Segments.Count == 0)
             {
                 return false;
             }
-
-            if (InitialLocation == null || !InitialLocation.ValidateLocation())
+            foreach (Segment segment in Segments)
+            {
+                if (!segment.IsValid())
+                {
+                    return false;
+                }
+            }
+            
+            if (InitialLocation == null || !InitialLocation.IsValid())
             {
                 return false;
             }
-
+            if (Passengers < 0)
+            {
+                return false;
+            }
             return true;
         }
     }

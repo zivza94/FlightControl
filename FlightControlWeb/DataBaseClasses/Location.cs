@@ -9,7 +9,9 @@ namespace FlightControlWeb.DataBaseClasses
     {
         public Location()
         {
-            
+            Longitude = -200;
+            Latitude = -200;
+            DateTime = DateTime.MinValue;
         }
         public Location(double longitude, double latitude, DateTime time)
         {
@@ -27,14 +29,18 @@ namespace FlightControlWeb.DataBaseClasses
         [JsonPropertyName("date_time")]
         public DateTime DateTime { get ; set ; }
 
-        public bool ValidateLocation()
+        public bool IsValid()
         {
-            if (Longitude != null && Latitude != null && DateTime != null)
+            if (DateTime == DateTime.MinValue)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            if (!Utiles.IsLatitudeValid(Latitude) || !Utiles.IsLongitudeValid(Longitude))
+            {
+                return false;
+            }
+            return true;
         }
     }
         

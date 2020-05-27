@@ -7,7 +7,8 @@ namespace FlightControlWeb.DataBaseClasses
     {
         public Server()
         {
-
+            ServerUrl = null;
+            ServerId = null;
         }
         public Server(string id,string url)
         {

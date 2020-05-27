@@ -1,0 +1,86 @@
+.selector-for-some-widget {
+    box-sizing: content-box;
+}
+
+body {
+    font-family: sans-serif;
+    color: white;
+    background-size: cover;
+    background-position: 0 50%;
+}
+
+#opening {
+    max-height: 130px;
+    padding-top: 20px;
+    padding-left: 2%;
+
+    background: url("https://images.pexels.com/photos/1831265/pexels-photo-1831265.jpeg?cs=srgb&dl=photo-of-airplane-wing-above-the-clouds-1831265.jpg&fm=jpg");
+    background-size: cover;
+    background-position: 0 50%;
+}
+
+#opening h1 {
+    margin-bottom: 5px;
+    position: relative;
+}
+
+#opening p {
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.alert {
+    margin-bottom: 10px;
+}
+
+
+iframe {
+    padding-bottom: 20px;
+    background-size: cover;
+    background-position: 0 50%;
+}
+
+#flightInfo {
+    position: relative;
+    padding-top: 40px;
+    margin-top: 10px;
+    height: 400px;
+    background:linear-gradient(rgba(216, 213, 213, 0.5), rgba(214, 208, 208, 0.5)), url("https://images.pexels.com/photos/3769138/pexels-photo-3769138.jpeg?cs=srgb&dl=person-with-toy-airplane-on-world-map-3769138.jpg&fm=jpg");
+    background-size: cover;
+    background-position: 0 50%;
+}
+#flightInfo #firstDetails {
+    color: rgb(12, 52, 184, 0.836);
+    text-shadow: -1px 0 white, 0 0px white, 0px 0 white, 0 -1px white;
+    margin-bottom: 20px;
+}
+.progressText {
+    margin: 0px;
+}
+.progressText p {
+    margin-bottom: 3px;
+    font-size: small;
+    text-align: center;
+}
+.progressText p:nth-child(3) {
+    font-size: x-small;
+}
+.progress-bar {
+    height: 5px;
+}
+#flightInfo #lastDetails {
+    color: rgba(34, 29, 29, 0.733);
+    margin-top: 60px;
+} p:first-child {
+    margin-bottom: 3px;
+}
+
+button[type = sumbit] {
+    margin: 20px;
+}
+
+#flightsList {
+    margin-top: 20px;
+} .delete {
+    color:black;
+}
