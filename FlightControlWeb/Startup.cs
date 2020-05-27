@@ -26,6 +26,9 @@ namespace FlightControlWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()));
             services.AddControllers();
             services.AddRouting();
             //databases
@@ -35,6 +38,7 @@ namespace FlightControlWeb
             //client
             services.AddHttpClient("api", client =>
                 client.DefaultRequestHeaders.Add("Accept", "application/json"));
+            
 
         }
 
@@ -50,7 +54,7 @@ namespace FlightControlWeb
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseCors("AllowAll");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
