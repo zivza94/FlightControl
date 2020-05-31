@@ -31,14 +31,14 @@ namespace FlightControlWeb.Controllers
             _client = factory.CreateClient("api");
         }
         [HttpPost]
-        public async Task<ActionResult<FlightPlan>> PostFlightPlan([FromBody] FlightPlan plan)
+        public async Task<ActionResult<FlightPlan>> PostFlightPlan(FlightPlan plan)
         {
             //FlightPlan plan = JsonConvert.DeserializeObject<FlightPlan>(planJson);
             if (!plan.IsValid())
             {
                 return BadRequest("Flight plan isn't valid");
             }
-            string id = Utiles.GenarateId(plan.CompanyName);
+            string id = Utiles.GenerateId(plan.CompanyName);
             bool isAdd = _flightPlans.TryAdd(id, plan);
             if (!isAdd)
             {

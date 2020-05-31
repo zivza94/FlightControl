@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace FlightControlWeb.DataBaseClasses
 {
@@ -34,6 +35,7 @@ namespace FlightControlWeb.DataBaseClasses
         public int Passengers { get; set; }
         [JsonPropertyName("company_name")]
         public string CompanyName { get; set; }
+        [JsonConverter(typeof(DateTimeConverter))]
         [JsonPropertyName("date_time")]
         public DateTime Time { get; set; }
         [JsonPropertyName("is_external")]

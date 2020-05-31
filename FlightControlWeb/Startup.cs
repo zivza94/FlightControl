@@ -38,7 +38,7 @@ namespace FlightControlWeb
             //client
             services.AddHttpClient("api", client =>
                 client.DefaultRequestHeaders.Add("Accept", "application/json"));
-            
+
 
         }
 

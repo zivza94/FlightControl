@@ -63,7 +63,7 @@ namespace FlightControlWeb.Controllers
             _flightPlans.Remove(id);
             return Ok(id);
         }
-
+        //get the flights from data base
         private List<Flight> ActiveFlights(DateTime currentTime)
         {
             List<Flight> flights = new List<Flight>();
@@ -79,7 +79,7 @@ namespace FlightControlWeb.Controllers
 
             return flights;
         }
-
+        //get flights from external servers
         private async Task<List<Flight>> FlightsFromServers(string relativeTo)
         {
             _externalFlights.Clear();
@@ -87,27 +87,40 @@ namespace FlightControlWeb.Controllers
             using var client = new HttpClient();
             foreach (Server server in _servers.Values)
             {
-                List<Flight> externalFlights = new List<Flight>();
-                //get json of flights
-                string data = await RetriveDataFromServer(server, relativeTo);
-                if (data == "")
-                {
-                    continue;
-                }
-                //desrialize
-                externalFlights = JsonConvert.DeserializeObject<List<Flight>>(data);
-                foreach (Flight flight in externalFlights)
-                {
-                    bool isOk = _externalFlights.TryAdd(flight.Id, server.ServerId);
-                    flight.IsExternal = true;
-                }
                 //add to flights
-                flights.AddRange(externalFlights);
+                flights.AddRange(await ExternalFlights(relativeTo, server));
             }
             return flights;
         }
 
-        public async Task<string> RetriveDataFromServer(Server server,string relativeTo)
+        private async Task<List<Flight>> ExternalFlights(string relativeTo, Server server)
+        {
+            List<Flight> externalFlights = new List<Flight>();
+            //get json of flights
+            string data = await RetriveDataFromServer(server, relativeTo);
+            if (data == "")
+            {
+                return externalFlights;
+            }
+
+            //desrialize
+            externalFlights = JsonConvert.DeserializeObject<List<Flight>>(data);
+            foreach (Flight flight in externalFlights)
+            {
+                if (!flight.IsValid())
+                {
+                    externalFlights.Remove(flight);
+                    continue;
+                }
+                flight.IsExternal = true;
+                bool isOk = _externalFlights.TryAdd(flight.Id, server.ServerId);
+                
+            }
+            return externalFlights;
+        }
+
+        //connect with external servers
+        private async Task<string> RetriveDataFromServer(Server server,string relativeTo)
         {
             HttpResponseMessage respone;
             try
