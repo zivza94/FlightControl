@@ -22,12 +22,15 @@ namespace FlightControlWeb.DataBaseClasses
             Longitude = startLongitude;
             TimespanSecond = timespan;
         }
-
+        [JsonProperty("latitude")]
         [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
+
+        [JsonProperty("longitude")]
         [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
 
+        [JsonProperty("timespan_seconds")]
         [JsonPropertyName("timespan_seconds")]
         public int TimespanSecond { get; set; }
 

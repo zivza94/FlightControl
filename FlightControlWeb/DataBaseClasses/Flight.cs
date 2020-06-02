@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace FlightControlWeb.DataBaseClasses
@@ -25,19 +26,33 @@ namespace FlightControlWeb.DataBaseClasses
         {
             
         }
+        [JsonProperty("flight_id")]
         [JsonPropertyName("flight_id")]
         public string Id { get; set; }
+
+        [JsonProperty("longitude")]
         [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
+
+        [JsonProperty("latitude")]
         [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
+
+        [JsonProperty("passengers")]
         [JsonPropertyName("passengers")]
         public int Passengers { get; set; }
+
+        [JsonProperty("company_name")]
         [JsonPropertyName("company_name")]
         public string CompanyName { get; set; }
-        [JsonConverter(typeof(DateTimeConverter))]
+
+        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter), "yyyy-MM-ddTHH:mm:ssZ")]
+        [JsonProperty("date_time")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(DateTimeConverter))]
         [JsonPropertyName("date_time")]
         public DateTime Time { get; set; }
+
+        [JsonProperty("is_external")]
         [JsonPropertyName("is_external")]
         public bool IsExternal { get; set; }
 

@@ -8,7 +8,10 @@ using FlightControlWeb.DataBaseClasses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Serialization;
+using System.Text.Json;
 using Newtonsoft.Json;
+
+//using Newtonsoft.Json;
 
 namespace FlightControlWeb.Controllers
 {
@@ -36,15 +39,17 @@ namespace FlightControlWeb.Controllers
             //FlightPlan plan = JsonConvert.DeserializeObject<FlightPlan>(planJson);
             if (!plan.IsValid())
             {
-                return BadRequest("Flight plan isn't valid");
+                return BadRequest("Flight plan isn't valid, couldn't post");
             }
             string id = Utiles.GenerateId(plan.CompanyName);
             bool isAdd = _flightPlans.TryAdd(id, plan);
             if (!isAdd)
             {
-                return BadRequest("Error in POST");
+                return BadRequest("Error in POST flight lan");
             }
-            return CreatedAtAction(actionName: "GetFlightPlan", new { id }, plan);
+
+            var retval = CreatedAtAction(actionName: "GetFlightPlan", new {id}, plan);
+            return await Task.FromResult(retval);
         }
 
 
@@ -60,18 +65,20 @@ namespace FlightControlWeb.Controllers
             string serverId;
             if (!_externalFlights.TryGetValue(id, out serverId))
             {
-                return NotFound(id);
+                return NotFound("No flight plan with id: "+ id);
             }
 
             Server server;
             if (!_servers.TryGetValue(serverId, out server))
             {
-                return NotFound(id);
+                return NotFound("No flight plan with id: " + id);
             }
-            HttpResponseMessage respone = await _client.GetAsync(server.ServerUrl + "/api/FlightPlan/" + id);
+
+            string requestUri = server.ServerUrl + "/api/FlightPlan/" + id;
+            HttpResponseMessage respone = await _client.GetAsync(requestUri);
             if (!respone.IsSuccessStatusCode)
             {
-                return NotFound(id);
+                return NotFound("No flight plan with id: " + id);
             }
             var content = respone.Content;
             string data = await content.ReadAsStringAsync();
@@ -84,7 +91,7 @@ namespace FlightControlWeb.Controllers
         [HttpGet]
         public async Task<ActionResult<FlightPlan>> GetFlightPlanError()
         {
-            return BadRequest("No ID");
+            return await Task.FromResult(BadRequest("Please add ID"));
         }
 
 

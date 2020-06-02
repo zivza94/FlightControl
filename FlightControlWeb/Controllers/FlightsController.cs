@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FlightControlWeb.DataBaseClasses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+//using System.Text.Json.Serialization;
 
 
 namespace FlightControlWeb.Controllers
@@ -57,11 +59,11 @@ namespace FlightControlWeb.Controllers
             FlightPlan plan;
             if (!_flightPlans.TryGetValue(id, out plan))
             {
-                return NotFound(id);
+                return NotFound("No flight plan with id: " +id);
             }
 
             _flightPlans.Remove(id);
-            return Ok(id);
+            return await Task.FromResult(Ok(id));
         }
         //get the flights from data base
         private List<Flight> ActiveFlights(DateTime currentTime)
@@ -105,7 +107,9 @@ namespace FlightControlWeb.Controllers
 
             //desrialize
             externalFlights = JsonConvert.DeserializeObject<List<Flight>>(data);
-            foreach (Flight flight in externalFlights)
+            List<Flight> tempExternalFlights = new List<Flight>();
+            tempExternalFlights.AddRange(externalFlights);
+            foreach (Flight flight in tempExternalFlights)
             {
                 if (!flight.IsValid())
                 {

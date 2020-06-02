@@ -9,8 +9,9 @@ namespace FlightControlWeb
         public static string DateTimeToString(DateTime time)
         {
             string retval;
-            retval = time.Year + "-" + time.Month + "-" + time.Day + "T" + time.TimeOfDay + 'Z';
-            return retval;
+            string datetime = time.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            //retval = time.Year + "-" + time.Month + "-" + time.Day + "T" + time.TimeOfDay + 'Z';
+            return datetime;
         }
 
         public static DateTime StringToDateTime(string time)

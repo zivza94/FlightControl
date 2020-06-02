@@ -22,14 +22,10 @@ namespace FlightControlWeb.Controllers
 
         // get /api/servers
         [HttpGet(Name = "GetServers")]
-        public ActionResult<List<Server>> GetServers()
+        public async Task<ActionResult<List<Server>>> GetServers()
         {
             List<Server> serversList = _servers.Values.ToList();
-            if (serversList.Count == 0)
-            {
-                return Ok("no servers");
-            }
-            return Ok(serversList);
+            return await Task.FromResult(Ok(serversList));
         }
 
         // post /api/servers
@@ -38,14 +34,14 @@ namespace FlightControlWeb.Controllers
         {
             if (!server.ValidateServer())
             {
-                return BadRequest("server not valid");
+                return await Task.FromResult(BadRequest("server not valid"));
             }
             if (!_servers.TryAdd(server.ServerId, server))
             {
-                return BadRequest("Couldn't add server");
+                return await Task.FromResult(BadRequest("Couldn't add server"));
             }
 
-            return CreatedAtAction(actionName: "GetServers", new { id = server.ServerId }, server);
+            return await Task.FromResult(CreatedAtAction(actionName: "GetServers", new { id = server.ServerId }, server));
         }
 
         // delete /api/servers/{id}
@@ -57,7 +53,7 @@ namespace FlightControlWeb.Controllers
                 return NotFound(id);
             }
             _servers.Remove(id);
-            return Ok(id);
+            return await Task.FromResult(Ok(id));
         }
     }
 }

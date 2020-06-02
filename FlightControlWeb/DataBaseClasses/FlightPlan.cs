@@ -9,15 +9,19 @@ namespace FlightControlWeb.DataBaseClasses
 {
     public class FlightPlan
     {
+        [JsonProperty("company_name")]
         [JsonPropertyName("company_name")]
         public string CompanyName { get; set; }
 
+        [JsonProperty("passengers")]
         [JsonPropertyName("passengers")]
         public int Passengers { get; set;}
 
+        [JsonProperty("initial_location")]
         [JsonPropertyName("initial_location")]
         public Location InitialLocation { get; set; }
 
+        [JsonProperty("segments")]
         [JsonPropertyName("segments")]
         public LinkedList<Segment> Segments { get; set; }
         public FlightPlan()
@@ -76,8 +80,9 @@ namespace FlightControlWeb.DataBaseClasses
             int i = 0;
             while (i < segIndex)
             {
-                i++;
+                
                 startsegTime = startsegTime.AddSeconds(Segments.ElementAt(i).TimespanSecond);
+                i++;
             }
             latitude = Utiles.LinearInterpolation(startLatitude, endLatitude, startsegTime, Segments.ElementAt(i).TimespanSecond, current);
             longitude = Utiles.LinearInterpolation(startLongitude, endLongitude, startsegTime, Segments.ElementAt(i).TimespanSecond, current);

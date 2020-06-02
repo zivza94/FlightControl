@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 namespace FlightControlWeb.DataBaseClasses
@@ -20,12 +21,17 @@ namespace FlightControlWeb.DataBaseClasses
             DateTime= time;
 
         }
+        [JsonProperty("longitude")]
         [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
 
+        [JsonProperty("latitude")]
         [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
 
+        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter), "yyyy-MM-ddTHH:mm:ssZ")]
+        [JsonProperty("date_time")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(DateTimeConverter))]
         [JsonPropertyName("date_time")]
         public DateTime DateTime { get ; set ; }
 

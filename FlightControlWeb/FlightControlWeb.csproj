@@ -4,9 +4,16 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+
   <ItemGroup>
     <Folder Include="wwwroot\CSS\" />
-    <Folder Include="wwwroot\JS\" />
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
