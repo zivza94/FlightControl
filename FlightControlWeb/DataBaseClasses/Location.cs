@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 
 namespace FlightControlWeb.DataBaseClasses

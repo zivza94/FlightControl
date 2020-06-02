@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FlightControlWeb.DataBaseClasses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.Serialization;
-using System.Text.Json;
 using Newtonsoft.Json;
 
 //using Newtonsoft.Json;
@@ -36,7 +30,6 @@ namespace FlightControlWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<FlightPlan>> PostFlightPlan(FlightPlan plan)
         {
-            //FlightPlan plan = JsonConvert.DeserializeObject<FlightPlan>(planJson);
             if (!plan.IsValid())
             {
                 return BadRequest("Flight plan isn't valid, couldn't post");
@@ -67,13 +60,11 @@ namespace FlightControlWeb.Controllers
             {
                 return NotFound("No flight plan with id: "+ id);
             }
-
             Server server;
             if (!_servers.TryGetValue(serverId, out server))
             {
                 return NotFound("No flight plan with id: " + id);
             }
-
             string requestUri = server.ServerUrl + "/api/FlightPlan/" + id;
             HttpResponseMessage respone = await _client.GetAsync(requestUri);
             if (!respone.IsSuccessStatusCode)
@@ -83,7 +74,6 @@ namespace FlightControlWeb.Controllers
             var content = respone.Content;
             string data = await content.ReadAsStringAsync();
             flight = JsonConvert.DeserializeObject<FlightPlan>(data);
-
             return Ok(flight);
         }
 
@@ -93,8 +83,5 @@ namespace FlightControlWeb.Controllers
         {
             return await Task.FromResult(BadRequest("Please add ID"));
         }
-
-
-        
     }
 }

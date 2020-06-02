@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 
 namespace FlightControlWeb
@@ -8,9 +7,7 @@ namespace FlightControlWeb
     {
         public static string DateTimeToString(DateTime time)
         {
-            string retval;
             string datetime = time.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            //retval = time.Year + "-" + time.Month + "-" + time.Day + "T" + time.TimeOfDay + 'Z';
             return datetime;
         }
 
@@ -27,16 +24,15 @@ namespace FlightControlWeb
             int hours = int.Parse(timeArr[3]);
             int min = int.Parse(timeArr[4]);
             int sec = int.Parse(timeArr[5]);
-            //int timezone = int.Parse(timeArr[5].Substring(2));
 
             return new DateTime(year, mounth, day, hours, min, sec);
         }
-        public static double LinearInterpolation(double start, double end, DateTime startTime, int timespan, DateTime time)
+        public static double LinearInterpolation(double start, double end,
+            DateTime startTime, int timespan, DateTime time)
         {
             double current = start;
             double length = end - start;
             int currentSec = (int)time.Subtract(startTime).TotalSeconds;
-            //add the logic of the interpolation
             double timePass = (double)currentSec / (double)timespan;
             current += timePass * length;
             return current;

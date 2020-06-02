@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using FlightControlWeb.DataBaseClasses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 //using System.Text.Json.Serialization;
@@ -37,18 +33,21 @@ namespace FlightControlWeb.Controllers
         // get - /api/Flights?relative_to=<DATE_TIME>
         // get - /api/Flights?relative_to=<DATE_TIME> &sync_all
         [HttpGet]
-        public async Task<ActionResult<List<Flight>>> GetActiveFlights(string relative_to)
+        public async Task<ActionResult<List<Flight>>> GetActiveFlights()
         {
-
-            List<Flight> flights = new List<Flight>();
-            DateTime currentTime = Utiles.StringToDateTime(relative_to);
-            flights = ActiveFlights(currentTime);
+            if (!Request.Query.ContainsKey("relative_to"))
+            {
+                return BadRequest("No relative_to");
+            }
+            string relativeTo = Request.Query["relative_to"];
+            DateTime currentTime = Utiles.StringToDateTime(relativeTo);
+            List<Flight> flights = ActiveFlights(currentTime);
             if (!Request.Query.ContainsKey("sync_all"))
             {
                 return Ok(flights);
             }
 
-            var externalFlights = await FlightsFromServers(relative_to);
+            var externalFlights = await FlightsFromServers(relativeTo);
             flights.AddRange(externalFlights);
             return Ok(flights);
         }
@@ -56,8 +55,7 @@ namespace FlightControlWeb.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteFlight(string id)
         {
-            FlightPlan plan;
-            if (!_flightPlans.TryGetValue(id, out plan))
+            if (!_flightPlans.TryGetValue(id, out _))
             {
                 return NotFound("No flight plan with id: " +id);
             }
@@ -78,7 +76,6 @@ namespace FlightControlWeb.Controllers
                     flights.Add(flight);
                 }
             }
-
             return flights;
         }
         //get flights from external servers
@@ -117,7 +114,7 @@ namespace FlightControlWeb.Controllers
                     continue;
                 }
                 flight.IsExternal = true;
-                bool isOk = _externalFlights.TryAdd(flight.Id, server.ServerId);
+                _externalFlights.TryAdd(flight.Id, server.ServerId);
                 
             }
             return externalFlights;
@@ -129,7 +126,8 @@ namespace FlightControlWeb.Controllers
             HttpResponseMessage respone;
             try
             {
-                respone = await _client.GetAsync(server.ServerUrl + "/api/Flights?relative_to=" + relativeTo);
+                string requestUri = server.ServerUrl + "/api/Flights?relative_to=" + relativeTo;
+                respone = await _client.GetAsync(requestUri);
             }
             catch
             {

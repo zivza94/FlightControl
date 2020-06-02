@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace FlightControlWeb.DataBaseClasses
 {
     public class Flight
     {
-        public Flight(string id, double longitude, double latitude, int passengers, string companyName,
-            DateTime time)
+        public Flight(string id, double longitude, double latitude, 
+            int passengers, string companyName, DateTime time)
         {
             Id = id;
             Longitude = longitude;

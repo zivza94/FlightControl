@@ -32,7 +32,8 @@ namespace FlightControlWeb.DataBaseClasses
             Segments = null;
         }
         //public string Id => _id;
-        public FlightPlan(int passengers, string companyName, Location location, LinkedList<Segment> segments)
+        public FlightPlan(int passengers, string companyName,
+            Location location, LinkedList<Segment> segments)
         {
             //_id = GenarateID(companyName);
             Passengers = passengers;
@@ -84,8 +85,10 @@ namespace FlightControlWeb.DataBaseClasses
                 startsegTime = startsegTime.AddSeconds(Segments.ElementAt(i).TimespanSecond);
                 i++;
             }
-            latitude = Utiles.LinearInterpolation(startLatitude, endLatitude, startsegTime, Segments.ElementAt(i).TimespanSecond, current);
-            longitude = Utiles.LinearInterpolation(startLongitude, endLongitude, startsegTime, Segments.ElementAt(i).TimespanSecond, current);
+            latitude = Utiles.LinearInterpolation(startLatitude, endLatitude,
+                startsegTime, Segments.ElementAt(i).TimespanSecond, current);
+            longitude = Utiles.LinearInterpolation(startLongitude, endLongitude,
+                startsegTime, Segments.ElementAt(i).TimespanSecond, current);
             return new Flight(id,longitude,latitude, Passengers, CompanyName,current);
         }
 

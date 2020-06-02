@@ -1,16 +1,11 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FlightControlWeb.DataBaseClasses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace FlightControlWeb
 {
@@ -37,9 +32,12 @@ namespace FlightControlWeb
             services.AddControllers();
             services.AddRouting();
             //databases
-            services.AddSingleton(typeof(IDictionary<string,FlightPlan>), typeof(ConcurrentDictionary<string,FlightPlan>));
-            services.AddSingleton(typeof(IDictionary<string, Server>), typeof(ConcurrentDictionary<string, Server>));
-            services.AddSingleton(typeof(IDictionary<string, string>), typeof(ConcurrentDictionary<string, string>));
+            services.AddSingleton(typeof(IDictionary<string,FlightPlan>),
+                typeof(ConcurrentDictionary<string,FlightPlan>));
+            services.AddSingleton(typeof(IDictionary<string, Server>),
+                typeof(ConcurrentDictionary<string, Server>));
+            services.AddSingleton(typeof(IDictionary<string, string>),
+                typeof(ConcurrentDictionary<string, string>));
             //client
             services.AddHttpClient("api", client =>
                 client.DefaultRequestHeaders.Add("Accept", "application/json"));
